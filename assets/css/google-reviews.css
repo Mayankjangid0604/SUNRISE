@@ -1,0 +1,239 @@
+/* =====================================================================
+   SUNRISE HOSTELS — Google Reviews section
+   Uses the site's design tokens from style.css (--d-*). Load after it.
+   ===================================================================== */
+
+.gr-g { width: 18px; height: 18px; flex: none; }
+
+/* ---------- Header ---------- */
+
+.gr-head { text-align: center; max-width: 640px; margin: 0 auto; }
+.gr-head__badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--d-surface); border: 1px solid var(--line);
+  border-radius: 999px; padding: 8px 18px;
+  font-weight: 600; font-size: 0.86rem; color: var(--d-ink);
+  box-shadow: 0 6px 18px color-mix(in srgb, var(--d-ink) 8%, transparent);
+}
+.gr-head__badge .gr-g { width: 20px; height: 20px; }
+
+.gr-head__score { display: flex; flex-direction: column; align-items: center; gap: 6px; margin: 22px 0 4px; }
+.gr-head__score > b { font-family: var(--d-head); font-size: 3.2rem; line-height: 1; color: var(--d-primary); }
+.gr-head__count { font-size: 0.9rem; color: var(--d-muted); }
+
+.gr-stars { display: inline-flex; gap: 2px; font-size: 1.15rem; line-height: 1; }
+.gr-star { color: color-mix(in srgb, var(--d-ink) 18%, transparent); }
+.gr-star.on { color: #fbbc05; } /* Google review gold */
+
+.gr-head__tag { color: var(--d-muted); font-size: 1.02rem; margin: 14px auto 26px; max-width: 46ch; }
+.gr-head__actions { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; }
+
+/* ---------- Cards: desktop grid, mobile carousel ---------- */
+
+.gr-cards { margin-top: 40px; }
+.gr-track {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 18px;
+}
+@media (max-width: 1080px) { .gr-track { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 760px) {
+  /* swipeable horizontal carousel on mobile */
+  .gr-track {
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: 82%;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 10px;
+    scrollbar-width: thin;
+  }
+  .gr-card { scroll-snap-align: center; }
+}
+
+.gr-card {
+  position: relative;
+  background: var(--d-surface);
+  border: 1px solid var(--line);
+  border-radius: calc(var(--d-radius) * 1px + 4px);
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0; /* let grid tracks shrink instead of overflowing */
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--d-ink) 6%, transparent);
+  transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+  outline: none;
+}
+.gr-card:hover, .gr-card:focus-visible {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 46px color-mix(in srgb, var(--d-primary) 18%, transparent);
+  border-color: color-mix(in srgb, var(--d-primary) 35%, transparent);
+}
+.gr-card:focus-visible { box-shadow: 0 0 0 3px color-mix(in srgb, var(--d-accent) 40%, transparent); }
+
+.gr-card__top { display: flex; align-items: center; gap: 12px; padding-right: 24px; }
+.gr-card__av {
+  width: 42px; height: 42px; border-radius: 50%; flex: none; object-fit: cover;
+  background: var(--soft);
+}
+.gr-card__av--init {
+  display: inline-flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 0.95rem; color: var(--d-on-primary);
+  background: linear-gradient(135deg, var(--d-primary), var(--d-accent));
+}
+.gr-card__id { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.gr-card__id b { font-size: 0.98rem; color: var(--d-ink); line-height: 1.2; }
+.gr-card__id .gr-stars { font-size: 0.92rem; }
+/* Google G pinned to the card corner so it never squeezes the name */
+.gr-card__top > .gr-g { position: absolute; top: 18px; right: 18px; }
+
+.gr-card__time { font-size: 0.8rem; color: var(--d-muted); }
+.gr-card__text { font-size: 0.94rem; line-height: 1.6; color: color-mix(in srgb, var(--d-ink) 82%, var(--d-muted)); }
+.gr-card__more {
+  align-self: flex-start; margin-top: auto;
+  background: none; border: none; padding: 4px 0;
+  color: var(--d-primary); font-family: var(--d-body); font-weight: 600; font-size: 0.85rem;
+  cursor: pointer; text-decoration: underline; text-underline-offset: 3px;
+}
+.gr-card__more:hover { color: var(--d-accent); }
+
+/* ---------- States ---------- */
+
+.gr-state {
+  grid-column: 1 / -1;
+  text-align: center; padding: 44px 20px; color: var(--d-muted);
+  border: 1px dashed var(--line); border-radius: calc(var(--d-radius) * 1px);
+}
+.gr-state--prompt {
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+  max-width: 520px; margin: 0 auto;
+}
+.gr-state--prompt .gr-g { width: 30px; height: 30px; }
+.gr-state--prompt p { font-size: 0.98rem; line-height: 1.6; }
+.gr-state--prompt b { color: var(--d-ink); }
+.gr-state--loading::before {
+  content: ""; display: inline-block; width: 18px; height: 18px; margin-right: 10px;
+  vertical-align: -3px; border-radius: 50%;
+  border: 2px solid color-mix(in srgb, var(--d-primary) 30%, transparent);
+  border-top-color: var(--d-primary);
+  animation: gr-spin 0.8s linear infinite;
+}
+@keyframes gr-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .gr-state--loading::before { animation: none; } }
+
+/* ---------- Staggered fade-in (reuses .reveal from style.css) ---------- */
+
+.reveal-on .gr-card.reveal { transition-delay: calc(var(--i, 0) * 70ms); }
+
+/* =====================================================================
+   Extended components — verified badge, skeleton, distribution,
+   reviews page toolbar, star filters, pagination, dark mode
+   ===================================================================== */
+
+/* verified tick next to name */
+.gr-card__verified {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 15px; height: 15px; margin-left: 6px; vertical-align: 1px;
+  border-radius: 50%; background: #4285F4; color: #fff;
+  font-size: 0.62rem; font-weight: 700; line-height: 1;
+}
+
+/* ---------- Skeleton ---------- */
+.gr-skel {
+  background: var(--d-surface); border: 1px solid var(--line);
+  border-radius: calc(var(--d-radius) * 1px + 4px); padding: 22px;
+}
+.gr-skel__row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.gr-skel__av { width: 42px; height: 42px; border-radius: 50%; flex: none; }
+.gr-skel__lines { flex: 1; display: flex; flex-direction: column; gap: 7px; }
+.gr-skel__lines i { height: 10px; border-radius: 5px; display: block; }
+.gr-skel__lines i.s { width: 55%; }
+.gr-skel__p { display: block; height: 10px; border-radius: 5px; margin-top: 9px; }
+.gr-skel__p.s { width: 70%; }
+.gr-skel__av, .gr-skel__lines i, .gr-skel__p {
+  background: linear-gradient(90deg,
+    color-mix(in srgb, var(--d-ink) 7%, var(--d-surface)) 25%,
+    color-mix(in srgb, var(--d-ink) 13%, var(--d-surface)) 37%,
+    color-mix(in srgb, var(--d-ink) 7%, var(--d-surface)) 63%);
+  background-size: 400% 100%; animation: gr-shimmer 1.4s ease infinite;
+}
+@keyframes gr-shimmer { 0% { background-position: 100% 50%; } 100% { background-position: 0 50%; } }
+@media (prefers-reduced-motion: reduce) {
+  .gr-skel__av, .gr-skel__lines i, .gr-skel__p { animation: none; }
+}
+
+/* error state variant */
+.gr-state__ic { font-size: 1.8rem; display: block; margin-bottom: 8px; }
+.gr-state--error { border-color: color-mix(in srgb, #c0392b 40%, var(--line)); color: #c0392b; }
+
+/* ---------- Distribution / statistics panel ---------- */
+.gr-stats-panel {
+  display: grid; grid-template-columns: auto 1fr; gap: 28px; align-items: center;
+  background: var(--d-surface); border: 1px solid var(--line);
+  border-radius: calc(var(--d-radius) * 1px + 4px); padding: 24px 28px;
+}
+.gr-stats-panel__score { text-align: center; display: flex; flex-direction: column; gap: 6px; }
+.gr-stats-panel__score b { font-family: var(--d-head); font-size: 2.8rem; line-height: 1; color: var(--d-primary); }
+.gr-stats-panel__score span { font-size: 0.82rem; color: var(--d-muted); }
+.gr-dist { display: flex; flex-direction: column; gap: 7px; min-width: 0; }
+.gr-dist__row { display: grid; grid-template-columns: 40px 1fr 34px; align-items: center; gap: 12px; }
+.gr-dist__label { font-size: 0.82rem; color: var(--d-muted); white-space: nowrap; }
+.gr-dist__bar { height: 9px; border-radius: 99px; background: color-mix(in srgb, var(--d-ink) 10%, var(--d-surface)); overflow: hidden; }
+.gr-dist__bar i { display: block; height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--d-accent), #fbbc05); transition: width 0.6s ease; }
+.gr-dist__count { font-size: 0.8rem; color: var(--d-muted); text-align: right; }
+@media (max-width: 560px) {
+  .gr-stats-panel { grid-template-columns: 1fr; text-align: center; gap: 18px; }
+}
+
+/* ---------- Reviews page: toolbar, search, sort, filters ---------- */
+.rp-toolbar { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; margin-top: 6px; }
+.rp-search { flex: 1; min-width: 220px; }
+.rp-search input {
+  width: 100%; border: 1px solid var(--line); border-radius: 999px;
+  padding: 12px 18px; font-family: var(--d-body); font-size: 0.94rem;
+  background: var(--d-surface); color: var(--d-ink);
+}
+.rp-search input:focus { outline: none; border-color: var(--d-accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--d-accent) 22%, transparent); }
+.rp-sortwrap { display: flex; align-items: center; gap: 8px; }
+.rp-sortlabel { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--d-muted); }
+.rp-sortwrap select {
+  border: 1px solid var(--line); border-radius: 999px; padding: 11px 16px;
+  font-family: var(--d-body); font-size: 0.9rem; background: var(--d-surface); color: var(--d-ink); cursor: pointer;
+}
+
+.rp-filters { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.rp-filters button {
+  border: 1px solid var(--line); background: var(--d-surface); color: var(--d-muted);
+  border-radius: 999px; padding: 8px 16px; font-family: var(--d-body); font-weight: 600;
+  font-size: 0.85rem; cursor: pointer; transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+.rp-filters button:hover { border-color: color-mix(in srgb, var(--d-primary) 40%, transparent); }
+.rp-filters button.is-active { background: var(--d-primary); color: var(--d-on-primary); border-color: var(--d-primary); }
+
+.rp-count { margin-top: 18px; font-size: 0.85rem; color: var(--d-muted); }
+#rp-list { margin-top: 6px; }
+
+/* ---------- Pagination ---------- */
+.gr-pager { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px; margin-top: 34px; }
+.gr-pager__btn {
+  min-width: 40px; height: 40px; padding: 0 10px;
+  border: 1px solid var(--line); background: var(--d-surface); color: var(--d-ink);
+  border-radius: calc(var(--d-radius) * 1px); font-family: var(--d-body); font-weight: 600; cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.gr-pager__btn:hover:not(:disabled):not(.is-active) { background: var(--soft); }
+.gr-pager__btn.is-active { background: var(--d-primary); color: var(--d-on-primary); border-color: var(--d-primary); }
+.gr-pager__btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.gr-pager__gap { padding: 0 6px; color: var(--d-muted); }
+
+/* ---------- Dark mode (system) for the reviews page ---------- */
+@media (prefers-color-scheme: dark) {
+  .rv-page[data-theme-aware="true"] {
+    --d-bg: #14171c; --d-surface: #1c2028; --d-ink: #f2efe8;
+    --d-muted: #a3a8b5; --d-primary: #c9a96e; --d-accent: #e8d5ae; --d-on-primary: #14171c;
+    --soft: color-mix(in srgb, var(--d-primary) 14%, var(--d-bg));
+    --line: color-mix(in srgb, #ffffff 14%, transparent);
+  }
+}

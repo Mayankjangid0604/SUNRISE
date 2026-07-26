@@ -1,0 +1,183 @@
+/* Sunrise Hostels — reusable review UI components (vanilla, framework-free).
+   Exposes window.ReviewUI with pure render helpers used by both the
+   homepage section and the /reviews page. Accessible + design-system aware. */
+(function () {
+  "use strict";
+
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (m) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m];
+    });
+  }
+
+  function initials(name) {
+    return String(name || "?").trim().split(/\s+/).slice(0, 2)
+      .map(function (w) { return w.charAt(0).toUpperCase(); }).join("");
+  }
+
+  function stars(n, ariaHidden) {
+    n = Math.round(Number(n) || 0);
+    var out = "";
+    for (var i = 1; i <= 5; i++) out += '<span class="gr-star' + (i <= n ? " on" : "") + '">★</span>';
+    return '<span class="gr-stars"' +
+      (ariaHidden ? ' aria-hidden="true"' : ' role="img" aria-label="' + n + ' out of 5 stars"') +
+      ">" + out + "</span>";
+  }
+
+  /* Official Google "G" (brand colours) */
+  var GOOGLE_G =
+    '<svg class="gr-g" viewBox="0 0 48 48" aria-hidden="true" focusable="false">' +
+      '<path fill="#4285F4" d="M45.12 24.5c0-1.56-.14-3.06-.4-4.5H24v8.51h11.84c-.51 2.75-2.06 5.08-4.39 6.64v5.52h7.11c4.16-3.83 6.56-9.47 6.56-16.17z"/>' +
+      '<path fill="#34A853" d="M24 46c5.94 0 10.92-1.97 14.56-5.33l-7.11-5.52c-1.97 1.32-4.49 2.1-7.45 2.1-5.73 0-10.58-3.87-12.31-9.07H4.34v5.7C7.96 41.07 15.4 46 24 46z"/>' +
+      '<path fill="#FBBC05" d="M11.69 28.18c-.44-1.32-.69-2.73-.69-4.18s.25-2.86.69-4.18v-5.7H4.34C2.85 17.09 2 20.45 2 24s.85 6.91 2.34 9.88l7.35-5.7z"/>' +
+      '<path fill="#EA4335" d="M24 10.75c3.23 0 6.13 1.11 8.41 3.29l6.31-6.31C34.91 4.18 29.93 2 24 2 15.4 2 7.96 6.93 4.34 14.12l7.35 5.7c1.73-5.2 6.58-9.07 12.31-9.07z"/>' +
+    "</svg>";
+
+  /* ---------- ReviewCard ---------- */
+  function card(r, i) {
+    var name = esc(r.authorName);
+    var text = String(r.reviewText || "");
+    var long = text.length > 240;
+    var shown = long ? text.slice(0, 240) : text;
+    var avatar = r.authorPhoto
+      ? '<img class="gr-card__av" src="' + esc(r.authorPhoto) + '" alt="" loading="lazy" referrerpolicy="no-referrer" />'
+      : '<span class="gr-card__av gr-card__av--init" aria-hidden="true">' + esc(initials(r.authorName)) + "</span>";
+    var verified = r.isVerified
+      ? '<span class="gr-card__verified" title="Verified Google review" aria-label="Verified Google review">✓</span>' : "";
+    return (
+      '<article class="gr-card reveal in" tabindex="0" aria-label="Review by ' + name + ', ' + r.rating + ' stars" style="--i:' + (i || 0) + '">' +
+        '<div class="gr-card__top">' +
+          avatar +
+          '<div class="gr-card__id"><b>' + name + verified + "</b>" + stars(r.rating) + "</div>" +
+          GOOGLE_G +
+        "</div>" +
+        '<p class="gr-card__time">' + esc(r.relativeTime || "") + "</p>" +
+        '<p class="gr-card__text">' +
+          '<span class="gr-card__shown">' + esc(shown) + (long ? "…" : "") + "</span>" +
+          (long ? '<span class="gr-card__full" hidden>' + esc(text) + "</span>" : "") +
+        "</p>" +
+        (long ? '<button class="gr-card__more" type="button" aria-expanded="false">Read more</button>' : "") +
+      "</article>"
+    );
+  }
+
+  /* Wire the Read-more buttons inside a container */
+  function wireReadMore(container) {
+    container.querySelectorAll(".gr-card__more").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var c = btn.closest(".gr-card");
+        var shownEl = c.querySelector(".gr-card__shown");
+        var fullEl = c.querySelector(".gr-card__full");
+        var open = btn.getAttribute("aria-expanded") === "true";
+        shownEl.hidden = !open;
+        fullEl.hidden = open;
+        btn.textContent = open ? "Read more" : "Read less";
+        btn.setAttribute("aria-expanded", open ? "false" : "true");
+      });
+    });
+  }
+
+  /* ---------- Grid / Carousel ---------- */
+  function grid(reviews) {
+    return '<div class="gr-track">' + reviews.map(card).join("") + "</div>";
+  }
+
+  /* ---------- RatingSummary ---------- */
+  function summary(stats, opts) {
+    opts = opts || {};
+    var total = stats.total || 0;
+    var avg = stats.average || 0;
+    return (
+      '<div class="gr-head reveal">' +
+        '<div class="gr-head__badge">' + GOOGLE_G + "<span>Google Reviews</span></div>" +
+        (total
+          ? '<div class="gr-head__score">' +
+              "<b>" + avg.toFixed(1) + "</b>" +
+              stars(Math.round(avg)) +
+              '<span class="gr-head__count">Based on ' + total + " Google review" + (total === 1 ? "" : "s") + "</span>" +
+            "</div>"
+          : "") +
+        '<p class="gr-head__tag">' + esc(opts.tagline || "Trusted by hundreds of students. Read genuine reviews from our residents.") + "</p>" +
+        (opts.actions !== false
+          ? '<div class="gr-head__actions">' +
+              '<a class="d-btn d-btn--primary" href="' + esc(opts.writeUrl || "#") + '" target="_blank" rel="noopener noreferrer">✍️ Write a Google Review</a>' +
+              '<a class="d-btn d-btn--ghost" href="' + esc(opts.viewAllUrl || "reviews.html") + '"' + (opts.viewAllExternal ? ' target="_blank" rel="noopener noreferrer"' : "") + ">View All Reviews →</a>" +
+            "</div>"
+          : "") +
+      "</div>"
+    );
+  }
+
+  /* ---------- ReviewStatistics (distribution bars) ---------- */
+  function statistics(stats) {
+    var total = stats.total || 0;
+    var rows = "";
+    for (var s = 5; s >= 1; s--) {
+      var count = (stats.distribution && stats.distribution[s]) || 0;
+      var pct = total ? Math.round((count / total) * 100) : 0;
+      rows +=
+        '<div class="gr-dist__row">' +
+          '<span class="gr-dist__label">' + s + " ★</span>" +
+          '<span class="gr-dist__bar"><i style="width:' + pct + '%"></i></span>' +
+          '<span class="gr-dist__count">' + count + "</span>" +
+        "</div>";
+    }
+    return (
+      '<div class="gr-stats-panel">' +
+        '<div class="gr-stats-panel__score">' +
+          "<b>" + (total ? stats.average.toFixed(1) : "—") + "</b>" +
+          stars(Math.round(stats.average || 0)) +
+          '<span>' + total + " review" + (total === 1 ? "" : "s") + "</span>" +
+        "</div>" +
+        '<div class="gr-dist">' + rows + "</div>" +
+      "</div>"
+    );
+  }
+
+  /* ---------- States ---------- */
+  function skeleton(n) {
+    var one =
+      '<div class="gr-skel">' +
+        '<div class="gr-skel__row"><span class="gr-skel__av"></span><span class="gr-skel__lines"><i></i><i class="s"></i></span></div>' +
+        '<span class="gr-skel__p"></span><span class="gr-skel__p"></span><span class="gr-skel__p s"></span>' +
+      "</div>";
+    return '<div class="gr-track">' + new Array(n || 3).fill(one).join("") + "</div>";
+  }
+  function empty(msg) {
+    return '<div class="gr-state"><span class="gr-state__ic">🗒️</span><p>' + esc(msg || "No reviews to show yet.") + "</p></div>";
+  }
+  function error(msg) {
+    return '<div class="gr-state gr-state--error"><span class="gr-state__ic">⚠️</span><p>' + esc(msg || "Couldn't load reviews. Please try again.") + "</p></div>";
+  }
+  function loading(msg) {
+    return '<div class="gr-state gr-state--loading" role="status">' + esc(msg || "Loading reviews…") + "</div>";
+  }
+
+  /* ---------- Pagination ---------- */
+  function pagination(page, totalPages) {
+    if (totalPages <= 1) return "";
+    var html = '<nav class="gr-pager" aria-label="Reviews pages">';
+    html += '<button class="gr-pager__btn" data-page="' + (page - 1) + '"' + (page <= 1 ? " disabled" : "") + ' aria-label="Previous page">‹</button>';
+    var windowPages = [];
+    for (var p = 1; p <= totalPages; p++) {
+      if (p === 1 || p === totalPages || (p >= page - 1 && p <= page + 1)) windowPages.push(p);
+      else if (windowPages[windowPages.length - 1] !== "…") windowPages.push("…");
+    }
+    windowPages.forEach(function (p) {
+      if (p === "…") { html += '<span class="gr-pager__gap">…</span>'; return; }
+      html += '<button class="gr-pager__btn' + (p === page ? " is-active" : "") + '" data-page="' + p + '"' +
+              (p === page ? ' aria-current="page"' : "") + ">" + p + "</button>";
+    });
+    html += '<button class="gr-pager__btn" data-page="' + (page + 1) + '"' + (page >= totalPages ? " disabled" : "") + ' aria-label="Next page">›</button>';
+    html += "</nav>";
+    return html;
+  }
+
+  window.ReviewUI = {
+    esc: esc, stars: stars, GOOGLE_G: GOOGLE_G,
+    card: card, grid: grid, wireReadMore: wireReadMore,
+    summary: summary, statistics: statistics,
+    skeleton: skeleton, empty: empty, error: error, loading: loading,
+    pagination: pagination,
+  };
+})();

@@ -1,0 +1,115 @@
+{
+  "_readme": "Sunrise Hostels reviews. Replace these sample entries with your real Google reviews (copy them from your Google Business Profile). Keep the same field shape. This file has the exact structure a backend /api/reviews endpoint would return, so it can later be swapped for a live API with no frontend changes. See README.md → 'Google Reviews system'.",
+  "profileUrl": "https://maps.app.goo.gl/oCR81Cp9rcpMuQ746",
+  "writeReviewUrl": "https://maps.app.goo.gl/oCR81Cp9rcpMuQ746",
+  "reviews": [
+    {
+      "reviewId": "smpl-001",
+      "authorName": "Sunita Devi",
+      "authorPhoto": "",
+      "rating": 5,
+      "reviewText": "My daughter feels safe and at home here. The biometric entry and CCTV gave us complete peace of mind, and the food is fresh and homely. As parents, this is exactly what we were looking for near Gurukripa Coaching.",
+      "relativeTime": "2 weeks ago",
+      "publishTime": "2026-07-10T10:00:00.000Z",
+      "language": "en",
+      "profileUrl": "https://maps.app.goo.gl/oCR81Cp9rcpMuQ746",
+      "isVerified": true
+    },
+    {
+      "reviewId": "smpl-002",
+      "authorName": "Aarav Sharma",
+      "authorPhoto": "",
+      "rating": 5,
+      "reviewText": "Coaching is literally in front of the gate, so I save almost two hours of travel every day. Four meals daily, a quiet study hall, and steady WiFi — everything a serious NEET aspirant needs.",
+      "relativeTime": "3 weeks ago",
+      "publishTime": "2026-07-03T09:30:00.000Z",
+      "language": "en",
+      "profileUrl": "https://maps.app.goo.gl/oCR81Cp9rcpMuQ746",
+      "isVerified": true
+    },
+    {
+      "reviewId": "smpl-003",
+      "authorName": "Rohan Verma",
+      "authorPhoto": "",
+      "rating": 4,
+      "reviewText": "Good hostel with a disciplined environment. Rooms are clean and the AC works well through the Rajasthan summer. Wardens are strict but genuinely helpful during exam season.",
+      "relativeTime": "a month ago",
+      "publishTime": "2026-06-20T14:20:00.000Z",
+      "language": "en",
+      "profileUrl": "https://maps.app.goo.gl/oCR81Cp9rcpMuQ746",
+      "isVerified": true
+    },
+    {
+      "reviewId": "smpl-004",
+      "authorName": "Rajesh Meena",
+      "authorPhoto": "",
+      "rating": 5,
+      "reviewText": "We visited several hostels before choosing Sunrise. The fully-AC campus, the mess quality, and the safety arrangements were clearly the best in the area. Staff keep us updated about our son regularly.",
+      "relativeTime": "a month ago",
+      "publishTime": "2026-06-12T11:45:00.000Z",
+      "language": "en",
+      "profileUrl": "https://maps.app.goo.gl/oCR81Cp9rcpMuQ746",
+      "isVerified": true
+    },
+    {
+      "reviewId": "smpl-005",
+      "authorName": "Priya Kumari",
+      "authorPhoto": "",
+      "rating": 5,
+      "reviewText": "The girls wing is spotless and very secure. Lady wardens on every floor and home-style meals make it feel like a second home. Two years here and I would not change a thing.",
+      "relativeTime": "2 months ago",
+      "publishTime": "2026-05-28T16:10:00.000Z",
+      "language": "en",
+      "profileUrl": "https://maps.app.goo.gl/oCR81Cp9rcpMuQ746",
+      "isVerified": true
+    },
+    {
+      "reviewId": "smpl-006",
+      "authorName": "Imran Qureshi",
+      "authorPhoto": "",
+      "rating": 5,
+      "reviewText": "Best decision for my JEE prep year. The library and study hall stay open late, and the every-day-special dinner keeps morale up. Highly recommend to anyone studying at Gurukripa.",
+      "relativeTime": "2 months ago",
+      "publishTime": "2026-05-15T19:00:00.000Z",
+      "language": "en",
+      "profileUrl": "https://maps.app.goo.gl/oCR81Cp9rcpMuQ746",
+      "isVerified": true
+    },
+    {
+      "reviewId": "smpl-007",
+      "authorName": "Deepa Rao",
+      "authorPhoto": "",
+      "rating": 4,
+      "reviewText": "Clean rooms, polite staff and good hygiene in the mess. WiFi could be a touch faster in the evenings, but overall a very comfortable and safe stay for my daughter.",
+      "relativeTime": "3 months ago",
+      "publishTime": "2026-04-30T12:00:00.000Z",
+      "language": "en",
+      "profileUrl": "https://maps.app.goo.gl/oCR81Cp9rcpMuQ746",
+      "isVerified": true
+    },
+    {
+      "reviewId": "smpl-008",
+      "authorName": "Vikram Singh",
+      "authorPhoto": "",
+      "rating": 5,
+      "reviewText": "Fully AC campus, RO water, hot water on every floor, and a warden who actually picks up the phone. My parents stopped worrying after their first visit. That says everything.",
+      "relativeTime": "3 months ago",
+      "publishTime": "2026-04-18T08:40:00.000Z",
+      "language": "en",
+      "profileUrl": "https://maps.app.goo.gl/oCR81Cp9rcpMuQ746",
+      "isVerified": true
+    },
+    {
+      "reviewId": "smpl-009",
+      "authorName": "Ananya Gupta",
+      "authorPhoto": "",
+      "rating": 5,
+      "reviewText": "Homely food, spotless washrooms and a genuinely caring team. The open space and playground help take a break from studies. Feels safe and well-managed at all hours.",
+      "relativeTime": "4 months ago",
+      "publishTime": "2026-03-22T17:30:00.000Z",
+      "language": "en",
+      "profileUrl": "https://maps.app.goo.gl/oCR81Cp9rcpMuQ746",
+      "isVerified": true
+    }
+  ]
+}
